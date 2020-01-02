@@ -24,9 +24,7 @@ def eval_transform_values(dir, kind, mask=None, m=None):
 			translate = (m[0][2]**2 + m[1][2]**2) ** 0.5
 			values.append(values[-1] + translate)
 		elif kind == 'scale':
-			scale_x = (m[0][0]**2 + m[1][0]**2) ** 0.5
-			scale_y = (m[0][1]**2 + m[1][1]**2) ** 0.5
-			scale = 0.5 * (scale_x + scale_y)
+			scale = 0.5 * (abs(m[0][0]) + abs(m[1][1]))
 			values.append(values[-1] * scale)
 		elif kind == 'rotate':
 			rotate0 = np.arctan2(-m[0][1], m[0][0])
