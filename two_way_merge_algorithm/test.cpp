@@ -1,10 +1,9 @@
-#include <cassert>
 #include <vector>
 #include <iostream>
 #include "two_way_merge_algorithm.h"
 
 
-static void mergeCallback(std::vector<int>& arr, size_t left, size_t mid, size_t right)
+static void mergeSortCallback(std::vector<int>& arr, size_t left, size_t mid, size_t right)
 {
     std::vector<int> arrCopy = arr;
     size_t i = left, j = mid + 1, k = left;
@@ -25,7 +24,7 @@ int main()
 {
     {
         std::vector<int> arr = { 4,2,1,8,10,3,9 };
-        TwoWayMergeAlgorithm_iterative(arr, mergeCallback);
+        TwoWayMergeAlgorithm_iterative(arr, mergeSortCallback);
         for (int x : arr)
             std::cout << x << std::endl;
     }
@@ -34,7 +33,7 @@ int main()
 
     {
         std::vector<int> arr = { 4,2,1,8,10,3,9 };
-        TwoWayMergeAlgorithm_recursive(arr, mergeCallback);
+        TwoWayMergeAlgorithm_recursive(arr, mergeSortCallback);
         for (int x : arr)
             std::cout << x << std::endl;
     }
