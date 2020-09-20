@@ -1,0 +1,5 @@
+Here's a very simple experiment about CPU branch prediction.
+
+The programs are to loop over an array and remove duplications, but one with if-branch and the other not.
+
+The result is expected. Compiled with clang -O3 flag on my MacBook, the no-branch one runs at 2X speed.
