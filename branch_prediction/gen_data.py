@@ -1,7 +1,7 @@
 import random
 
 N = 100000000
-f = open("data.cpp", "w")
+f = open("data.c", "w")
 f.write(f"int N = {N};")
 f.write("int arr[] = {")
 
@@ -13,3 +13,4 @@ for i in range(N):
         last = random.randint(0, 1000000000)
     f.write(str(last) + ",")
 f.write("0};")
+f.close()
