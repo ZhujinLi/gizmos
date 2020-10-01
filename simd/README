@@ -1,0 +1,14 @@
+This is an attempt to optimize a program with AVX2.
+
+The result is rather surprising to me: the compiler did even a better job than my hand-written SIMD intrinsics.
+
+Here is the result on my Macbook Pro:
+
+===Plain version===
+Elapsed time: 0.521067s
+===Plain version with O3===
+Elapsed time: 0.136172s
+===SIMD version with O3===
+Elapsed time: 0.240057s
+
+I can't explain it unless digging into assembly code...
