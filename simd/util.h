@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-static int POINT_NUMBER = 100000000;
+static int POINT_NUMBER = 500000000;
 
 struct FVec2 {
   float x;
@@ -31,6 +31,7 @@ void tictoc() {
 
   if (!flag) // tic
   {
+    std::cout << "Tic..." << std::endl;
     time = std::chrono::high_resolution_clock::now();
   } else // toc
   {
