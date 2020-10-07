@@ -23,9 +23,7 @@ int main() {
   FVec2 *points = genPoints();
   float res = 0;
 
-  tictoc();
   res += findMaxDist(points, POINT_NUMBER);
-  tictoc();
 
   tictoc();
   res += findMaxDist(points, POINT_NUMBER);

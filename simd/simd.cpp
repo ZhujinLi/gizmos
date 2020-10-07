@@ -3,8 +3,6 @@
 #include <immintrin.h>
 #include <iostream>
 
-void *g_distBuf;
-
 float findMaxDist(const FVec2 *points, size_t n) {
   assert(n % 8 == 0);                                    // Even groups
   assert(reinterpret_cast<uintptr_t>(points) % 32 == 0); // Memory alignment
@@ -20,41 +18,42 @@ float findMaxDist(const FVec2 *points, size_t n) {
   __m256 S = _mm256_set_ps(s.y, s.x, s.y, s.x, s.y, s.x, s.y, s.x);
   __m256 T = _mm256_set_ps(t.y, t.x, t.y, t.x, t.y, t.x, t.y, t.x);
 
-  __m256 *V0 = (__m256 *)points;
-  __m256 *V1 = V0 + 1;
-  __m256 *V2 = reinterpret_cast<__m256 *>(g_distBuf);
-  __m256 *V0End = (__m256 *)(points + n);
+  __m256 *V = (__m256 *)points;
+  __m256 *VEnd = (__m256 *)(points + n);
 
-  tictoc();
-  for (; V0 < V0End; V0 += 2, V1 += 2, V2++) {
-    __m256 T0 = _mm256_fmadd_ps(S, *V0, T);
-    __m256 T1 = _mm256_fmadd_ps(S, *V1, T);
-    *V2 = _mm256_hadd_ps(T0, T1);
+  __m256 MAX = _mm256_set1_ps(0.0f);
+  for (; V < VEnd; V += 2) {
+    __m256 M0 = _mm256_fmadd_ps(S, *V, T);
+    __m256 M1 = _mm256_fmadd_ps(S, *(V + 1), T);
+
+    MAX = _mm256_max_ps(MAX, _mm256_and_ps(_mm256_hadd_ps(M0, M1),
+                                           _mm256_set1_epi32(0x7fffffff)));
   }
-  tictoc();
 
-  tictoc();
-  float maxDist = 0;
-  float *dists = reinterpret_cast<float *>(g_distBuf);
-  for (size_t i = 0; i < n; i++) {
-    maxDist = std::max(maxDist, fabsf(dists[i]));
-  }
-  tictoc();
-
+  float maxDist = *reinterpret_cast<float *>(&MAX);
+  maxDist = std::max(maxDist, *(reinterpret_cast<float *>(&MAX) + 1));
+  maxDist = std::max(maxDist, *(reinterpret_cast<float *>(&MAX) + 2));
+  maxDist = std::max(maxDist, *(reinterpret_cast<float *>(&MAX) + 3));
+  maxDist = std::max(maxDist, *(reinterpret_cast<float *>(&MAX) + 4));
+  maxDist = std::max(maxDist, *(reinterpret_cast<float *>(&MAX) + 5));
+  maxDist = std::max(maxDist, *(reinterpret_cast<float *>(&MAX) + 6));
+  maxDist = std::max(maxDist, *(reinterpret_cast<float *>(&MAX) + 7));
   return maxDist;
 }
 
 int main() {
   FVec2 *points = genPoints();
-  g_distBuf = aligned_alloc(32, POINT_NUMBER / 8 * sizeof(__m256));
-
   float res = 0;
+
   res += findMaxDist(points, POINT_NUMBER);
+
+  tictoc();
   res += findMaxDist(points, POINT_NUMBER);
+  tictoc();
+
   res *= 0.5f;
   std::cout << "Result: " << res << std::endl;
 
-  free(g_distBuf);
   freePoints(points);
   return 0;
 }

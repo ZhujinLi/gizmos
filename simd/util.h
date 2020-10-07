@@ -5,7 +5,7 @@
 #include <vector>
 
 // L3 cache on my machine is 9MB
-static int POINT_NUMBER = 1000000 / 2;
+static int POINT_NUMBER = 1000000;
 
 struct FVec2 {
   float x;
