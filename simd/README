@@ -6,29 +6,35 @@ Here is the result produced with my Intel i7-8850H:
 
 ===Scalar version with no optimization===
 Tic...
-Toc. Elapsed time: 0.0105013s
+Toc. Elapsed time: 0.0104125s
 Result: 0.706358
 ===Scalar version with O1===
 Tic...
-Toc. Elapsed time: 0.00620566s
+Toc. Elapsed time: 0.0061206s
 Result: 0.706358
 ===Scalar version with O3===
 Tic...
-Toc. Elapsed time: 0.00168101s
+Toc. Elapsed time: 0.00153205s
 Result: 0.706358
 ===SIMD version with no optimization===
 Tic...
-Toc. Elapsed time: 0.00170286s
+Toc. Elapsed time: 0.00158943s
 Result: 0.706358
 ===SIMD version with O3===
 Tic...
-Toc. Elapsed time: 0.000492751s
+Toc. Elapsed time: 0.00055227s
+Result: 0.706358
+===SIMD version with O3 + 4 accumulators===
+Tic...
+Toc. Elapsed time: 0.000491203s
 Result: 0.706358
 
 As the result shows, SIMD version is over 3X faster than scalar version.
 
-There are a few things to note about:
+Here are some of my conclusions:
 
    * SIMD version can easily be slower than scalar version, if SIMD code is written badly, and -O3 is enabled for both.
    * The procedure needs to execute at least once before performance test, or the result could be remarkably affected by cache-misses.
    * My clang++ compiler performs auto-vectorization with -O3, but fails to do actual optimization; it uses %xmm registers for scalar calculations.
+   * According to instruction latency provided by Intel official site, I further optimize code with 4 accumulators, but only to obtain slight performance gain (10%).
+
