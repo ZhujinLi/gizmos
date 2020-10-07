@@ -22,9 +22,16 @@ float findMaxDist(const FVec2 *points, size_t n) {
 int main() {
   FVec2 *points = genPoints();
   float res = 0;
+
+  res += findMaxDist(points, POINT_NUMBER);
+
   tictoc();
-  res = findMaxDist(points, POINT_NUMBER);
+  res += findMaxDist(points, POINT_NUMBER);
   tictoc();
+
+  res *= 0.5f;
+  std::cout << "Result: " << res << std::endl;
+
   freePoints(points);
-  return (int)res;
+  return 0;
 }
