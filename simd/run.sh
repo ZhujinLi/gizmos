@@ -2,17 +2,17 @@
 
 CC=clang++
 
-echo "===Plain version with no optimization==="
-$CC --std=c++17 plain.cpp -o plain
-./plain
+echo "===Scalar version with no optimization==="
+$CC --std=c++17 scalar.cpp -o scalar
+./scalar
 
-echo "===Plain version with O1==="
-$CC --std=c++17 -O1 plain.cpp -o plain_O1
-./plain_O1
+echo "===Scalar version with O1==="
+$CC --std=c++17 -O1 scalar.cpp -o scalar_O1
+./scalar_O1
 
-echo "===Plain version with O3==="
-$CC --std=c++17 -O3 plain.cpp -o plain_O3
-./plain_O3
+echo "===Scalar version with O3==="
+$CC --std=c++17 -O3 scalar.cpp -o scalar_O3
+./scalar_O3
 
 echo "===SIMD version with no optimization==="
 $CC --std=c++17 -mavx -mfma simd.cpp -o simd

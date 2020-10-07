@@ -1,14 +1,34 @@
-This is an attempt to optimize a program with AVX2.
+This is an attempt to optimize a program with Intel AVX2 SIMD intrinsics.
 
-The result is rather surprising to me: the compiler did even a better job than my hand-written SIMD intrinsics.
+The program is to calculate the furthest point on a polyline, which is the core of Ramer-Douglas-Peucker algorithm.
 
-Here is the result on my Macbook Pro:
+Here is the result produced on my Macbook Pro:
 
-===Plain version===
-Elapsed time: 0.521067s
-===Plain version with O3===
-Elapsed time: 0.136172s
+===Scalar version with no optimization===
+Tic...
+Toc. Elapsed time: 0.0105013s
+Result: 0.706358
+===Scalar version with O1===
+Tic...
+Toc. Elapsed time: 0.00620566s
+Result: 0.706358
+===Scalar version with O3===
+Tic...
+Toc. Elapsed time: 0.00168101s
+Result: 0.706358
+===SIMD version with no optimization===
+Tic...
+Toc. Elapsed time: 0.00170286s
+Result: 0.706358
 ===SIMD version with O3===
-Elapsed time: 0.240057s
+Tic...
+Toc. Elapsed time: 0.000492751s
+Result: 0.706358
 
-I can't explain it unless digging into assembly code...
+As the result shows, SIMD version is over 3X faster than scalar version.
+
+There are a few things to note about:
+
+   * SIMD version can easily be slower than scalar version, if SIMD code is written badly, and -O3 is enabled for both.
+   * The procedure needs to execute at least once before performance test, or the result could be remarkably affected by cache-misses.
+   * My clang++ compiler performs auto-vectorization with -O3, but fails to do actual optimization; it uses %xmm registers for scalar calculations.
