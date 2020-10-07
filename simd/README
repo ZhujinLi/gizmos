@@ -2,7 +2,7 @@ This is an attempt to optimize a program with Intel AVX2 SIMD intrinsics.
 
 The program is to calculate the furthest point on a polyline, which is the core of Ramer-Douglas-Peucker algorithm.
 
-Here is the result produced on my Macbook Pro:
+Here is the result produced with my Intel i7-8850H:
 
 ===Scalar version with no optimization===
 Tic...
