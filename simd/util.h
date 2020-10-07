@@ -4,7 +4,8 @@
 #include <iostream>
 #include <vector>
 
-static int POINT_NUMBER = 500000000;
+// L3 cache on my machine is 9MB
+static int POINT_NUMBER = 1000000 / 2;
 
 struct FVec2 {
   float x;
@@ -12,6 +13,7 @@ struct FVec2 {
 };
 
 inline FVec2 *genPoints() {
+  // Note that MSVC doesn't implement this standard function
   FVec2 *points = reinterpret_cast<FVec2 *>(
       aligned_alloc(32, POINT_NUMBER * sizeof(FVec2)));
   FVec2 *p = points;
@@ -36,7 +38,8 @@ void tictoc() {
   } else // toc
   {
     auto elapsed = std::chrono::high_resolution_clock::now() - time;
-    std::cout << "Elapsed time: " << elapsed.count() / 1e9 << "s" << std::endl;
+    std::cout << "Toc. Elapsed time: " << elapsed.count() / 1e9 << "s"
+              << std::endl;
   }
 
   flag = !flag;
