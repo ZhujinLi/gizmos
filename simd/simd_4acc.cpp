@@ -1,13 +1,12 @@
 #include <immintrin.h>
-
 #include <cassert>
+#include <cstring>
 #include <iostream>
-
 #include "util.h"
 
 float findMaxDist(const FVec2 *points, size_t n) {
-  assert(n % 8 == 0);                                     // Even groups
-  assert(reinterpret_cast<uintptr_t>(points) % 32 == 0);  // Memory alignment
+  assert(n % 8 == 0);                                    // Even groups
+  assert(reinterpret_cast<uintptr_t>(points) % 32 == 0); // Memory alignment
 
   FVec2 p = points[0];
   FVec2 q = points[n - 1];
@@ -28,9 +27,11 @@ float findMaxDist(const FVec2 *points, size_t n) {
   __m256 MAX2 = _mm256_set1_ps(0.0f);
   __m256 MAX3 = _mm256_set1_ps(0.0f);
 
-  for (; V < VEnd; V += 8) {
-    static const __m256 ABSMASK = _mm256_set1_epi32(0x7fffffff);
+  __m256i ABS_MASKi = _mm256_set1_epi32(0x7fffffff);
+  __m256 ABS_MASK;
+  memcpy(&ABS_MASK, &ABS_MASKi, 32);
 
+  for (; V < VEnd; V += 8) {
     __m256 M0 = _mm256_fmadd_ps(S, *V, T);
     __m256 M1 = _mm256_fmadd_ps(S, *(V + 1), T);
 
@@ -48,16 +49,16 @@ float findMaxDist(const FVec2 *points, size_t n) {
     __m256 REDUCED2 = _mm256_hadd_ps(M4, M5);
     __m256 REDUCED3 = _mm256_hadd_ps(M6, M7);
 
-    __m256 ABS0 = _mm256_and_ps(REDUCED0, ABSMASK);
+    __m256 ABS0 = _mm256_and_ps(REDUCED0, ABS_MASK);
     MAX0 = _mm256_max_ps(MAX0, ABS0);
 
-    __m256 ABS1 = _mm256_and_ps(REDUCED1, ABSMASK);
+    __m256 ABS1 = _mm256_and_ps(REDUCED1, ABS_MASK);
     MAX1 = _mm256_max_ps(MAX1, ABS1);
 
-    __m256 ABS2 = _mm256_and_ps(REDUCED2, ABSMASK);
+    __m256 ABS2 = _mm256_and_ps(REDUCED2, ABS_MASK);
     MAX2 = _mm256_max_ps(MAX2, ABS2);
 
-    __m256 ABS3 = _mm256_and_ps(REDUCED3, ABSMASK);
+    __m256 ABS3 = _mm256_and_ps(REDUCED3, ABS_MASK);
     MAX3 = _mm256_max_ps(MAX3, ABS3);
   }
 

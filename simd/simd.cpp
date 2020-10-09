@@ -1,5 +1,6 @@
 #include "util.h"
 #include <cassert>
+#include <cstring>
 #include <immintrin.h>
 #include <iostream>
 
@@ -22,12 +23,16 @@ float findMaxDist(const FVec2 *points, size_t n) {
   __m256 *VEnd = (__m256 *)(points + n);
 
   __m256 MAX = _mm256_set1_ps(0.0f);
+
+  __m256i ABS_MASKi = _mm256_set1_epi32(0x7fffffff);
+  __m256 ABS_MASK;
+  memcpy(&ABS_MASK, &ABS_MASKi, 32);
+
   for (; V < VEnd; V += 2) {
     __m256 M0 = _mm256_fmadd_ps(S, *V, T);
     __m256 M1 = _mm256_fmadd_ps(S, *(V + 1), T);
 
-    MAX = _mm256_max_ps(MAX, _mm256_and_ps(_mm256_hadd_ps(M0, M1),
-                                           _mm256_set1_epi32(0x7fffffff)));
+    MAX = _mm256_max_ps(MAX, _mm256_and_ps(_mm256_hadd_ps(M0, M1), ABS_MASK));
   }
 
   float maxDist = *reinterpret_cast<float *>(&MAX);
