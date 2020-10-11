@@ -22,6 +22,6 @@ echo "===SIMD version with O3==="
 $CC -O3 -mavx2 -mfma simd.cpp -o simd_O3
 ./simd_O3
 
-echo "===SIMD version with O3 + 4 accumulators==="
-$CC -O3 -mavx2 -mfma simd_4acc.cpp -o simd_4acc_O3
-./simd_4acc_O3
+echo "===SIMD version with O3 + 4 slots==="
+$CC -O3 -mavx2 -mfma simd_4s.cpp -o simd_4s_O3
+./simd_4s_O3
