@@ -5,8 +5,10 @@
 #include <fstream>
 #include <iostream>
 
+// We need to keep the aspect 1 because the calculations in the geometry shader
+// assume an isotropic coordinate system.
 const int W = 640;
-const int H = 480;
+const int H = 640;
 
 GLuint createShader(const char *path, GLenum type) {
   GLuint shader = glCreateShader(type);
