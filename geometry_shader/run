@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+clang++ ./main.cpp -lglfw -framework OpenGL && ./a.out
