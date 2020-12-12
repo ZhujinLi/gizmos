@@ -1,1 +1,6 @@
 Given a polyline, triangulate it with a certain width in the geometry shader.
+
+This blog discussed the same technique: https://blog.tammearu.eu/posts/gllines/.
+
+When using OpenGL ES or WebGL, geometry shader is not available. A workaround is to use vertex
+shader with repeated vertexes: http://jsrun.net/CWLKp.

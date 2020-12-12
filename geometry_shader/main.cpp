@@ -8,9 +8,6 @@
 const int W = 640;
 const int H = 480;
 
-const int NPOINT = 4;
-float pointsXy[NPOINT * 2] = {-0.8f, 0.0f, 0.0f, 0.0f, 0.3f, -0.5f, 0.8f, 0.0f};
-
 GLuint createShader(const char *path, GLenum type) {
   GLuint shader = glCreateShader(type);
 
@@ -46,6 +43,9 @@ GLuint createShaderProgram() {
   GLuint vs = createShader("polyline.vert", GL_VERTEX_SHADER);
   glAttachShader(prog, vs);
 
+  GLuint gs = createShader("polyline.geom", GL_GEOMETRY_SHADER);
+  glAttachShader(prog, gs);
+
   GLuint fs = createShader("polyline.frag", GL_FRAGMENT_SHADER);
   glAttachShader(prog, fs);
 
@@ -68,6 +68,16 @@ GLuint createShaderProgram() {
 }
 
 void render() {
+  // We need to append 1 point at the beginning and the end since it's adjacency
+  // primitive.
+  const int NPOINT = 4 + 2;
+  float pointsXy[NPOINT * 2] = {0.0f, 0.0f,  -0.8f, 0.0f, 0.0f, 0.0f,
+                                0.3f, -0.5f, 0.8f,  0.0f, 0.0f, 0.0f};
+  pointsXy[0] = pointsXy[2] * 2 - pointsXy[4];
+  pointsXy[1] = pointsXy[3] * 2 - pointsXy[5];
+  pointsXy[10] = pointsXy[8] * 2 - pointsXy[6];
+  pointsXy[11] = pointsXy[9] * 2 - pointsXy[7];
+
   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 
@@ -85,7 +95,7 @@ void render() {
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-  glDrawArrays(GL_LINE_STRIP, 0, NPOINT);
+  glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, NPOINT);
 
   glDisableVertexAttribArray(0);
   glDeleteBuffers(1, &vbo);
