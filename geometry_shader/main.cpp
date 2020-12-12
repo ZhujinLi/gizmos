@@ -101,6 +101,7 @@ void render() {
 
   glDisableVertexAttribArray(0);
   glDeleteBuffers(1, &vbo);
+  glDeleteVertexArrays(1, &vao);
   glDeleteProgram(prog);
 }
 
